@@ -1,0 +1,129 @@
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Antinode</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+</head>
+<body ng-controller="example">
+<center>
+      <h1>Hello {{Name}}!</h1>
+      
+      <form ng-hide="hideform" ng-submit="start()">
+        <label>Name:</label>
+        <input type="text" ng-model="Name" placeholder="Enter a name here">
+        <input type="submit" value="submit" ng-if="Name" >
+      </form>
+      <!--<h2 ng-show="step">step: {{step}}</h2>-->
+
+    <div ng-repeat="q in question">
+        <div ng-show="step == {{q.No}}" >
+            <form name="myForm">
+            <h3>{{q.No}}. {{q.ques}}</h3>
+                <input type="radio" name="{{q.No}}" ng-model="q.qname" ng-model-options="{updateOn: 'blur'}" ng-maxlength="1" value="{{q.ans.A}}" required> {{q.ans.A}}<br>
+                <input type="radio" name="{{q.No}}" ng-model="q.qname" ng-model-options="{updateOn: 'blur'}" ng-maxlength="1" value="{{q.ans.B}}" required> {{q.ans.B}}<br>
+                <input type="radio" name="{{q.No}}" ng-model="q.qname" ng-model-options="{updateOn: 'blur'}" ng-maxlength="1" value="{{q.ans.C}}" required> {{q.ans.C}}<br>
+                <input type="radio" name="{{q.No}}" ng-model="q.qname" ng-model-options="{updateOn: 'blur'}" ng-maxlength="1" value="{{q.ans.D}}" required> {{q.ans.D}}<br>
+            <button ng-click="setStep(q.No,q.qname,q.correct)" type="submit" ng-disabled="isDisable(q)">Submit</button>
+            <button ng-show="$last" ng-click="cancleTime()">Next last</button>
+            <!--<input ng-click="setStep(q.No,q.qname,q.correct)" type="submit" value="Next" ng-disabled="q.qname == q.qname[$index]+q.No"></input>-->
+            </form>
+              
+              <!--<h2>Value: {{q.qname}}</h2>
+              <h2>Value: {{q.qname[$index]+q.No}}</h2>-->
+      
+        </div>
+
+    </div><!--End ng-repeat-->
+        <div name="summary" ng-hide="!summary_all">
+            <hr>
+            <h1>Summary</h1>
+            <!--<h3>{{summary_all}}</h3>-->
+            <div ng-repeat="s in summary_all">
+                <h3>{{s.step}}: 
+                <font color="Blue">Ans: {{s.ans}}</font> 
+                <font color="green">Currect: {{s.correct}}</font> 
+                <font color="darkorange">Point: {{s.point}}</font>
+                </h3>
+                
+            </div>
+            <!--<h1>Point: {{summary_all.length }} s: {{question.length }}</h1>-->
+        </div>
+
+    
+ </center>
+ <!--<form name="myForm">
+  <input name="description" type="text" ng-model="description" required />
+  <button ng-disabled="myForm.$invalid">Save</button>
+</form>-->
+
+
+</body>
+<script type="text/javascript">
+
+var app = angular.module('App', []);
+    
+app.controller('example', function($scope,$http,$timeout) {
+
+    
+    $scope.start = function(){
+       $scope.hideform = true;
+      
+       var data_all = [];
+       var point = 0;
+
+       $http.get('question.json')
+       .then(function(res){
+          $scope.question = res.data;
+          $scope.step = 1;
+          console.log('lenght = '+  $scope.question.length);
+
+          $scope.time($scope.step);//call function
+
+        //   var fruits = ["Banana", "Orange", "Apple", "Mango"];
+        //   fruits.length;
+        });//End http
+
+        $scope.time = function(step,length){
+            $timeout(function () { $scope.setStep(step); }, 15000);
+            console.log('step in timeout = ' + step +' $scope.step = '+ $scope.step);
+
+        }//End scope
+
+        $scope.setStep = function(step,ans,correct){
+            console.log('$scope.step ='+$scope.step+'step ='+step)
+            if($scope.step <= step){
+                $scope.step = Number(step) + 1;//Next step
+                if(correct !== undefined & ans !== undefined){
+                    if(correct == ans){
+                        point = Number(point) + 1;//Add point
+                    }//End if
+                }//End if
+            
+                data_all.push({step,ans,correct,point});
+                $scope.summary_all = data_all;
+                
+                // $timeout.cancel($scope.time);//cancle old time
+                $scope.time($scope.step);//call function
+            }//End if
+            
+            console.log('point = '+ point);
+            // console.log('data_all =' + data_all);
+            console.log('step = '+step);
+            console.log('ans ='+ans);
+            console.log('true = '+ correct);
+            console.log('--------------');
+        }//End scope
+
+        $scope.cancleTime = function(){
+            $timeout.cancel($scope.time());
+            console.log('cancleTime');
+        }//End scope
+
+    }//End scope
+
+});
+
+</script> 
+
+
+</html>

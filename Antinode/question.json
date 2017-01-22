@@ -1,0 +1,50 @@
+{
+  "0":{
+    "No":"1",
+    "ans":{
+      "A":"A",
+      "B":"B",
+      "C":"C",
+      "D":"D"
+    },
+    "correct":"A",
+    "qname":"q1",
+    "ques":"bird is"
+  },
+  "1":{
+    "No":"2",
+    "ans":{
+      "A":"A",
+      "B":"B",
+      "C":"C",
+      "D":"D"
+    },
+    "correct":"C",
+    "qname":"q2",
+    "ques":"game of god"
+  },
+  "2":{
+    "No":"3",
+    "ans":{
+      "A":"A",
+      "B":"B",
+      "C":"C",
+      "D":"D"
+    },
+    "correct":"B",
+    "qname":"q3",
+    "ques":"something wrong"
+  },
+  "3":{
+    "No":"4",
+    "ans":{
+      "A":"A",
+      "B":"B",
+      "C":"C",
+      "D":"D"
+    },
+    "correct":"D",
+    "qname":"q4",
+    "ques":"you ar so handsome"
+  }
+}
